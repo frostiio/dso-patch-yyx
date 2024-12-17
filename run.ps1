@@ -4,7 +4,7 @@
     Generates and stores hash values of installer files to ./latest/sha256 file
 .DESCRIPTION
 	This PowerShell script downloads the specified version installer files to ./latest folder. Administrator rights are required.
-    
+
     Constraints:
     - [Maintenance of URLs] Download paths may be outdated over time. Update of url links will be required when path is no longer valid.
 
@@ -23,15 +23,18 @@
     UBI 8               | ubi8_<VERSION>.tar
     UBI 8 MINIMAL       | ubi8-minimal_<VERSION>.tar
     AWS_CLI             | awscli-exe-linux-x86_64-<VERSION>.zip
-    CORRETO 11          | amazon-correto-<VERSION>-linux-x64.tar.gz 
-    CORRETO 17          | amazon-correto-<VERSION>-linux-x64.tar.gz 
+    CORRETTO 11         | amazon-corretto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 17         | amazon-corretto-<VERSION>-linux-x64.tar.gz
+    CORRETTO 21         | amazon-corretto-<VERSION>-linux-x64.tar.gz
     DEPENDENCY CHECK    | dependency-check-<VERSION>-release.zip
-    MAVEN               | apache-maven-<VERSION>-bin.tar.gz 
-    NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz 
-    NODEJS 18           | node-v<VERSION>-linux-x64.tar.gz 
-    NODEJS 20           | node-v<VERSION>-linux-x64.tar.gz 
-    PYTHON 39           | Python-<VERSION>.tgz 
+    MAVEN               | apache-maven-<VERSION>-bin.tar.gz
+    NODEJS 14           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 18           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 20           | node-v<VERSION>-linux-x64.tar.gz
+    NODEJS 22           | node-v<VERSION>-linux-x64.tar.gz
+    PYTHON 39           | Python-<VERSION>.tgz
     PYTHON 310          | Python-<VERSION>.tgz
+    PYTHON 311          | Python-<VERSION>.tgz
     SONARQUBE           | sonarqube-<VERSION>.zip
     SONAR SCANNER CLI   | sonar-scanner-cli-<VERSION>-linux.zip
     OPENSCAP            | scap-security-guide-<VERSION>.zip
@@ -42,8 +45,7 @@
     HADOLINT            | hadolint-v<VERSION>.tar.gz
     LOMBOK              | lombok-<VERSION>.jar
     TFLINT              | tflint-<VERSION>-linux-amd64.zip
-    TERRAFORM 1.7       | terraform_<VERSION>_linux_amd64.zip
-    TERRAFORM AWS       | terraform-provider-aws_<VERSION>_linux_amd64.zip (?)
+    TERRAFORM           | terraform_<VERSION>_linux_amd64.zip
     OPENSHIFT INSTALL   | openshift-install-linux-<VERSION>.tar.gz
     OPENSHIFT CLIENT    | openshift-client-linux-<VERSION>.tar.gz
     CCOCTL              | ccoctl-linux-<VERSION>.tar.gz
@@ -55,100 +57,16 @@
     MONGODB             | mongodb-linux-x86_64-rhel80-<VERSION>.tgz
     JIRA                | atlassian-jira-software-<VERSION>.tar.gz
     CONFLUENCE          | atlassian-confluence-software-<VERSION>.tar.gz
+    BURPSUITE PRO	| burpsuite_pro_windows-x64_v<VERSION>.exe
     CHROME              |
     __________________________________________________________________________
 
 .NOTES
-	Last updated on 13 Aug 2024
+	Last updated on 12 Dec 2024
 #>
 
-################### VERSIONS ###################
-# COMMENT OUT THOSE WITH NO UPDATE TO DOWNLOAD #
-################################################
-################ For DSO tools ################# 
-# $BURP_VERSION="2023.11.1"
-$GITLAB_VERSIONS=@("17.4.4","17.5.2")
-$GITLAB_RUNNER_VERSION="17.5.2"
-$GITLAB_CHART_VERSION="0.70.2"
-################ For Mgt-client ################
-# $PGADMIN_VERSION="8.12" 
-# $OPENSSL_VERSION="8.0.40"
-# $KUBECTL_VERSION="1.31.2"
-# $IAM_AUTHENTICATOR_VERSION="0.6.27"
-# $HELM_VERSION="3.16.3" 
-# $MYSQLWORKBENCH_VERSION="8.0.40"
-############### For Runner Images ###############
-# $UBI8_VERSION="8.9-1136"
-# $UBI8_MINIMAL_VERSION="8.9-1137"
-# $UBI9_VERSION="9.3-1476"
-# $UBI9_MINIMAL_VERSION="9.3-1475"
-# $UBI9_MICRO_VERSION="9.3-9"
-# $AWS_CLI_VERSION="2.15.30" 
-# $PYTHON_39_VERSION="3.9.19"
-# $PYTHON_310_VERSION="3.10.14"
-# $CORRETO_11_VERSION="11.0.22.7.1"
-# $CORRETO_17_VERSION="17.0.10.7.1"
-# $CORRETO_17_VERSION="21.0.5.11.1"
-# $DEPENDENCY_CHECK_VERSION="9.0.10"
-# $MAVEN_VERSION="3.9.6"
-# $NODE_18_VERSION="18.18.2"
-# $NODE_20_VERSION="20.10.0"
-# $SONARQUBE_VERSION_9="9.9.3.79811"
-# $SONAR_SCANNER_CLI_VERSION="5.0.1.3006"
-# $OPENSCAP_VERSION="0.1.71"
-# $CLAMAV_VERSION="1.2.1"
-# $GRYPE_VERSION="0.74.7"
-# $TRIVY_VERSION="0.50.0"
-# $COSIGN_VERSION="2.0.2"
-# $HADOLINT_VERSION="2.12.0"
-# $NODE_14_VERSION="14.21.3"
-# $SONARQUBE_VERSION_8="8.9.10.61524"
-# $LOMBOK_VERSION="1.18.30"
-# $TFLINT_VERSION="0.52.0"
-# $TERRAFORM_17_VERSION="1.7.5"
-# $TERRAFORM_PROVIDER_AWS_VERSION="5.57.0"
-# $OPENSHIFT_INSTALL_VERSION="4.16.2"
-# $OPENSHIFT_CLIENT_VERSION="4.16.2"
-# $CCOCTL_VERSION="4.16.2"
-# $ROXCTL_VERSION="4.4.4"
-# $GO_VERSION="1.22.5"
-# $KUBERNETES_CORE_VERSION="5.0.0"
-# $CHROME_VERSION="127.0.6533.99"
-############### For Collab Tools ###############
-# $ROCKETCHAT_VERSION="6.9.3"
-# $MONGOSH_VERSION="2.2.11"
-# $MONGODB_VERSION="6.0.16"
-# $JIRA_VERSION="9.12.11"
-# $CONFLUENCE_VERSION="8.5.12"
-# $AWS_CLI_VERSION="2.21.0"
-# $ANSIBLE_VERSION="2.18.0"
-# $CHROME_FOR_TESTING_VERSION="131.0.6778.69"
-# $CLAMAV_VERSION="1.4.1"
-# $CLOUD_CREDENTIAL_OPERATOR_VERSION="4.17.4"
-# $CORRETO_11_VERSION="11.0.25.9.1"
-# $CORRETO_17_VERSION="17.0.13.11.1"
-# $DEPENDENCY_CHECK_VERSION="11.1.0"
-# $FORTIFY_SCA_VERSION="24.4.X"
-# $GO_VERSION="1.23.3"
-# $GRYPE_VERSION="0.84.0"
-# $HADOLINT_VERSION="2.12.0"
-# $KUBERNETES_CORE_VERSION="5.0.0"
-# $MAVEN_VERSION="3.9.9"
-# $NODEJS_18_VERSION="V18.20.5"
-# $NODEJS_20_VERSION="V20.18.0"
-# $OPENSHIFT_CLIENT_VERSION="4.17.4"
-# $OPENSHIFT_INSTALL_VERSION="4.17.4"
-# $PYTHON_310_VERSION="3.10.15"
-# $PYTHON_39_VERSION="3.9.20"
-# $ROXCTL_VERSION="4.4.6"
-# $SONAR_SOURCE_CLI_VERSION="6.2.1.4610"
-# $SONARQUBE_VERSION="9.9.7.96285"
-# $TERRAFORM_VERSION="1.9.8"
-# $TERRAFORM_PROVIDER_AWS_VERSION="5.75.1"
-# $TFLINT_VERSION="0.54.0"
-# $TRIVY_VERSION="0.57.0"
-# $UBI8_VERSION="8.10-1132"
-# $UBI8_MINIMAL_VERSION="8.10-1130"
+. .\variables.ps1
+
 ################################################
 # HELPER FUNCTIONS                             #
 ################################################
@@ -189,7 +107,7 @@ function downloadAndRenameFile {
         Write-Output "Starting download for $Name"
         Start-Process -NoNewWindow -FilePath $WGET -ArgumentList "--content-disposition $URL -O $DOWNLOAD_DIR\$FileName" -Wait
     }
-} 
+}
 
 function craneFile {
     param(
@@ -223,7 +141,7 @@ function hashFile {
     )
     $FilePath = "$DOWNLOAD_DIR\$FileName"
     $HashAlgorithm = "sha256"
-    
+
     # Use CertUtil to calculate the hash
     $certUtilOutput = & certutil -hashfile "$FilePath" $HashAlgorithm
 
@@ -271,14 +189,12 @@ function writeTextFile {
 
 function DSO_TOOLS {param()
     Write-Output "Downloading DSO Tools"
-    ## Burpsuite
-    if ($global:BURP_VERSION -eq $null -and ![string]::IsNullOrEmpty($BURP_VERSION)) {
-        $BURP_LINK_PREFIX="https://portswigger.net/burp/releases/download?product=enterprise&"
-        $BURP_SERVER_LINK="${BURP_LINK_PREFIX}${BURP_VERSION}&type=updater"
-        $BURP_AGENT_LINK="${BURP_LINK_PREFIX}${BURP_VERSION}&type=agentupdate&component=1"
+    ## Burpsuite PRO
+    if ($global:BURP_PRO_VERSION -eq $null -and ![string]::IsNullOrEmpty($BURP_PRO_VERSION)) {
+        $BURP_PRO_LINK_PREFIX="https://portswigger.net/burp/releases/startdownload?product=community"
+        $BURP_PRO_LINK="${BURP_PRO_LINK_PREFIX}&version=${BURP_PRO_VERSION}&type=windowsx64"
 
-        downloadFile "Burpsuite Server" $BURP_VERSION $BURP_SERVER_LINK
-        downloadFile "Burpsuite Agent" $BURP_VERSION $BURP_AGENT_LINK
+        downloadFile "Burpsuite Pro" $BURP_PRO_VERSION $BURP_PRO_LINK
     } else {
         Write-Output "Skipping Burpsuite"
     }
@@ -288,7 +204,7 @@ function DSO_TOOLS {param()
         foreach ($version in $GITLAB_VERSIONS) {
             $GITLAB_EE_LINK="https://packages.gitlab.com/gitlab/gitlab-ee/packages/el/8/gitlab-ee-${version}-ee.0.el8.x86_64.rpm/download.rpm"
             downloadFile "Gitlab EE" $version $GITLAB_EE_LINK
-        }    
+        }
     } else {
         Write-Output "Skipping Gitlab"
     }
@@ -446,22 +362,40 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Python 3.10"
     }
 
-    ## Correto 11
-    if ($global:CORRETO_11_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETO_11_VERSION)) {
-        $CORRETO_11_LINK="https://corretto.aws/downloads/resources/${CORRETO_11_VERSION}/amazon-corretto-${CORRETO_11_VERSION}-linux-x64.tar.gz"
-        
-        downloadFile "Correto 11" $CORRETO_11_VERSION $CORRETO_11_LINK
+    ## Python 3.11
+    if ($global:PYTHON_311_VERSION -eq $null -and ![string]::IsNullOrEmpty($PYTHON_311_VERSION)) {
+        $PYTHON_311_LINK="https://www.python.org/ftp/python/${PYTHON_311_VERSION}/Python-${PYTHON_311_VERSION}.tgz"
+
+        downloadFile "Python 3.11" $PYTHON_311_VERSION $PYTHON_311_LINK
     } else {
-        Write-Output "Skipping Correto 11"
+        Write-Output "Skipping Python 3.11"
     }
 
-    ## Correto 17
-    if ($global:CORRETO_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETO_17_VERSION)) {
-        $CORRETO_17_LINK="https://corretto.aws/downloads/resources/${CORRETO_17_VERSION}/amazon-corretto-${CORRETO_17_VERSION}-linux-x64.tar.gz"
-        
-        downloadFile "Correto 17" $CORRETO_17_VERSION $CORRETO_17_LINK
+    ## Corretto 11
+    if ($global:CORRETTO_11_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_11_VERSION)) {
+        $CORRETTO_11_LINK="https://corretto.aws/downloads/resources/${CORRETTO_11_VERSION}/amazon-corretto-${CORRETTO_11_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "Corretto 11" $CORRETTO_11_VERSION $CORRETTO_11_LINK
     } else {
-        Write-Output "Skipping Correto 17"
+        Write-Output "Skipping Corretto 11"
+    }
+
+    ## Corretto 17
+    if ($global:CORRETTO_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_17_VERSION)) {
+        $CORRETTO_17_LINK="https://corretto.aws/downloads/resources/${CORRETTO_17_VERSION}/amazon-corretto-${CORRETTO_17_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "Corretto 17" $CORRETTO_17_VERSION $CORRETTO_17_LINK
+    } else {
+        Write-Output "Skipping Corretto 17"
+    }
+
+    ## Corretto 21
+    if ($global:CORRETTO_21_VERSION -eq $null -and ![string]::IsNullOrEmpty($CORRETTO_21_VERSION)) {
+        $CORRETTO_21_LINK="https://corretto.aws/downloads/resources/${CORRETTO_21_VERSION}/amazon-corretto-${CORRETTO_21_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "Corretto 21" $CORRETTO_21_VERSION $CORRETTO_21_LINK
+    } else {
+        Write-Output "Skipping Corretto 21"
     }
 
     ## Dependency Check
@@ -491,7 +425,7 @@ function RUNNER_IMAGES {param()
     } else {
         Write-Output "Skipping NodeJS 14"
     }
-    
+
     ## NodeJS 18
     if ($global:NODE_18_VERSION -eq $null -and ![string]::IsNullOrEmpty($NODE_18_VERSION)) {
         $NODE_18_LINK="https://nodejs.org/dist/v${NODE_18_VERSION}/node-v${NODE_18_VERSION}-linux-x64.tar.gz"
@@ -508,6 +442,15 @@ function RUNNER_IMAGES {param()
         downloadFile "NodeJS 20" $NODE_20_VERSION $NODE_20_LINK
     } else {
         Write-Output "Skipping NodeJS 20"
+    }
+
+    ## NodeJS 22
+    if ($global:NODE_22_VERSION -eq $null -and ![string]::IsNullOrEmpty($NODE_22_VERSION)) {
+        $NODE_22_LINK="https://nodejs.org/dist/v${NODE_22_VERSION}/node-v${NODE_22_VERSION}-linux-x64.tar.gz"
+
+        downloadFile "NodeJS 22" $NODE_22_VERSION $NODE_22_LINK
+    } else {
+        Write-Output "Skipping NodeJS 22"
     }
 
     ## Sonarqube8
@@ -531,7 +474,7 @@ function RUNNER_IMAGES {param()
     ## Sonar Scanner CLI
     if ($global:SONAR_SCANNER_CLI_VERSION -eq $null -and ![string]::IsNullOrEmpty($SONAR_SCANNER_CLI_VERSION)) {
         $SONAR_SCANNER_CLI_LINK="https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/${SONAR_SCANNER_CLI_VERSION}/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux-x64.zip"
-        
+
         downloadFile "Sonar Scanner CLI" $SONAR_SCANNER_CLI_VERSION $SONAR_SCANNER_CLI_LINK
     } else {
         Write-Output "Skipping Sonar Scanner CLI"
@@ -540,13 +483,13 @@ function RUNNER_IMAGES {param()
     ## Openscap
     if ($global:OPENSCAP_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSCAP_VERSION)) {
         $OPENSCAP_LINK="https://github.com/ComplianceAsCode/content/releases/download/v${OPENSCAP_VERSION}/scap-security-guide-${OPENSCAP_VERSION}.zip"
-        
+
         downloadFile "Openscap" $OPENSCAP_VERSION $OPENSCAP_LINK
     } else {
         Write-Output "Skipping Openscap"
     }
 
-    ## Clamav 
+    ## Clamav
     if ($global:CLAMAV_VERSION -eq $null -and ![string]::IsNullOrEmpty($CLAMAV_VERSION)) {
         $CLAMAV_LINK="https://www.clamav.net/downloads/production/clamav-${CLAMAV_VERSION}.tar.gz"
 
@@ -564,7 +507,7 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Grype"
     }
 
-    ## Trivy 
+    ## Trivy
     if ($global:TRIVY_VERSION -eq $null -and ![string]::IsNullOrEmpty($TRIVY_VERSION)) {
         $TRIVY_LINK="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
 
@@ -577,7 +520,7 @@ function RUNNER_IMAGES {param()
     if ($global:COSIGN_VERSION -eq $null -and ![string]::IsNullOrEmpty($COSIGN_VERSION)) {
         $COSIGN_LINK="https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
 
-        downloadFile "Cosign" $COSIGN_VERSION $COSIGN_LINK
+        downloadAndRenameFile "Cosign" $COSIGN_VERSION $COSIGN_LINK cosign-linux-amd64-${COSIGN_VERSION}
     } else {
         Write-Output "Skipping Cosign"
     }
@@ -609,28 +552,18 @@ function RUNNER_IMAGES {param()
         Write-Output "Skipping Tflint"
     }
 
-    ## Terraform 1.7
-    if ($global:TERRAFORM_17_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_17_VERSION)) {
-        $TERRAFORM_17_LINK="https://releases.hashicorp.com/terraform/${TERRAFORM_17_VERSION}/terraform_${TERRAFORM_17_VERSION}_linux_amd64.zip"
+    ## Terraform
+    if ($global:TERRAFORM_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_VERSION)) {
+        $TERRAFORM_LINK="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 
-        downloadFile "Terraform 1.7" $TERRAFORM_17_VERSION $TERRAFORM_17_LINK
+        downloadFile "Terraform" $TERRAFORM_VERSION $TERRAFORM_LINK
     } else {
-        Write-Output "Skipping Terraform 1.7"
-    }
-
-    ## Terraform Provider AWS
-    if ($global:TERRAFORM_PROVIDER_AWS_VERSION -eq $null -and ![string]::IsNullOrEmpty($TERRAFORM_PROVIDER_AWS_VERSION)) {
-        $TERRAFORM_PROVIDER_AWS_LINK="https://github.com/hashicorp/terraform-provider-aws/archive/refs/tags/v${TERRAFORM_PROVIDER_AWS_VERSION}.zip"
-
-        downloadFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK
-        # downloadAndRenameFile "Terraform Provider AWS" $TERRAFORM_PROVIDER_AWS_VERSION $TERRAFORM_PROVIDER_AWS_LINK "terraform-provider-aws_${TERRAFORM_PROVIDER_AWS_VERSION}_linux_amd64.zip"
-    } else {
-        Write-Output "Skipping Terraform Provider AWS"
+        Write-Output "Skipping Terraform"
     }
 
     ## Openshift Install
     if ($global:OPENSHIFT_INSTALL_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_INSTALL_VERSION)) {
-        $OPENSHIFT_INSTALL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux-${OPENSHIFT_INSTALL_VERSION}.tar.gz"
+        $OPENSHIFT_INSTALL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OPENSHIFT_INSTALL_VERSION}/openshift-install-linux-${OPENSHIFT_INSTALL_VERSION}.tar.gz"
 
         downloadFile "Openshift Installer" $OPENSHIFT_INSTALL_VERSION $OPENSHIFT_INSTALL_LINK
     } else {
@@ -639,16 +572,16 @@ function RUNNER_IMAGES {param()
 
     ## Openshift Client
     if ($global:OPENSHIFT_CLIENT_VERSION -eq $null -and ![string]::IsNullOrEmpty($OPENSHIFT_CLIENT_VERSION)) {
-        $OPENSHIFT_CLIENT_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux-${OPENSHIFT_CLIENT_VERSION}.tar.gz"
+        $OPENSHIFT_CLIENT_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OPENSHIFT_CLIENT_VERSION}/openshift-client-linux-${OPENSHIFT_CLIENT_VERSION}.tar.gz"
 
         downloadFile "Openshift Client" $OPENSHIFT_CLIENT_VERSION $OPENSHIFT_CLIENT_LINK
     } else {
-        Write-Output "Skipping Openshift Clientr"
+        Write-Output "Skipping Openshift Client"
     }
-    
+
     ## Cloud Credential Operator
     if ($global:CCOCTL_VERSION -eq $null -and ![string]::IsNullOrEmpty($CCOCTL_VERSION)) {
-        $CCOCTL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/ccoctl-linux-${CCOCTL_VERSION}.tar.gz"
+        $CCOCTL_LINK="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${CCOCTL_VERSION}/ccoctl-linux-${CCOCTL_VERSION}.tar.gz"
 
         downloadFile "Cloud Credential Operator (CCOCTL)" $CCOCTL_VERSION $CCOCTL_LINK
     } else {
@@ -689,21 +622,21 @@ function RUNNER_IMAGES {param()
         $CHROMEDRIVER_LINK="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip"
         downloadFile "Chrome" $CHROME_VERSION $CHROME_LINK
         downloadFile "Chrome Driver" $CHROME_VERSION $CHROMEDRIVER_LINK
-    
+
         # Extract Chrome and Chrome Driver
         $chromeZip = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chrome-linux64.zip"
         $chromedriverZip = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chromedriver-linux64.zip"
-    
+
         Expand-Archive -Path $chromeZip -DestinationPath $DOWNLOAD_DIR
         Expand-Archive -Path $chromedriverZip -DestinationPath $DOWNLOAD_DIR
-    
+
         # Create tar.gz archives
-        $chromeTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chrome-linux64.tar.gz"
-        $chromedriverTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chromedriver-linux64.tar.gz"
-    
+        $chromeTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chrome-linux64-${CHROME_VERSION}.tar.gz"
+        $chromedriverTar = Join-Path -Path $DOWNLOAD_DIR -ChildPath "chromedriver-linux64-${CHROME_VERSION}.tar.gz"
+
         tar -cvf $chromeTar -C $DOWNLOAD_DIR "chrome-linux64"
         tar -cvf $chromedriverTar -C $DOWNLOAD_DIR "chromedriver-linux64"
-    
+
         # Clean up extracted folders and zip files
         Remove-Item -Path $chromeZip -Force
         Remove-Item -Path $chromedriverZip -Force
@@ -731,7 +664,7 @@ function COLLAB_TOOLS {param()
     } else {
         Write-Output "Skipping Rocketchat"
     }
-    
+
     ## Mongosh
     if ($global:MONGOSH_VERSION -eq $null -and ![string]::IsNullOrEmpty($MONGOSH_VERSION)) {
         $MONGOSH_LINK="https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-x64.tgz"
@@ -774,7 +707,7 @@ function COLLAB_TOOLS {param()
 ################################################
 
 function HASHER {param()
-    
+
     Write-Output "Generating hash values for downloaded files"
     # Check if the file exist, else create text file if doesn't exist
     if (-not (Test-Path -Path "$DOWNLOAD_DIR\$HASH_TXTFILE" -PathType Leaf)) {
@@ -783,7 +716,7 @@ function HASHER {param()
 
     # Get the list of files in the folder
     $files = Get-ChildItem $DOWNLOAD_DIR -File
-    
+
     # Loop through each file and generate sha256 hash
     foreach ($file in $files) {
         if ($file.Name -eq $HASH_TXTFILE) {
