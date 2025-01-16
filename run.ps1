@@ -65,17 +65,20 @@
 	Last updated on 12 Dec 2024
 #>
 
-. .\variables.ps1
+. ./variables.ps1
+Write-Host $BURP_VERSION
 
 ################################################
 # HELPER FUNCTIONS                             #
 ################################################
-$WGET=".\tools\wget\wget.exe"
-$CRANE=".\tools\crane\crane.exe"
-$DOWNLOAD_DIR=".\latest"
-$DOWNLOAD_ZIP=".\latest.zip"
-$COLLAB_DOWNLOAD_DIR=".\latest\collab"
-$COLLAB_DOWNLOAD_ZIP=".\collab.zip"
+# $WGET=".\tools\wget\wget.exe"
+$WGET="/usr/bin/wget"
+# $CRANE=".\tools\crane\crane.exe"
+$CRANE="tools/crane/crane"
+$DOWNLOAD_DIR="latest"
+$DOWNLOAD_ZIP="latest.zip"
+$COLLAB_DOWNLOAD_DIR="latest/collab"
+$COLLAB_DOWNLOAD_ZIP="collab.zip"
 $HASH_TXTFILE="sha256.txt"
 function downloadFile {
     param(
@@ -86,8 +89,12 @@ function downloadFile {
         [Parameter(Mandatory = $true)]
         [string]$URL
     )
+    $DOWNLOAD_DIR_1=$DOWNLOAD_DIR+"/"+$URL.Split("/")[-1]
     if (![string]::IsNullOrEmpty($Version)) {
         Write-Output "Starting download for $Name"
+        write-host $WGET
+        write-host $DOWNLOAD_DIR
+        write-host $URL
         Start-Process -NoNewWindow -FilePath $WGET -ArgumentList "--no-check-certificate -P $DOWNLOAD_DIR --content-disposition $URL" -Wait
     }
 }
@@ -142,11 +149,12 @@ function hashFile {
     $FilePath = "$DOWNLOAD_DIR\$FileName"
     $HashAlgorithm = "sha256"
 
-    # Use CertUtil to calculate the hash
-    $certUtilOutput = & certutil -hashfile "$FilePath" $HashAlgorithm
+    # # Use CertUtil to calculate the hash
+    # $certUtilOutput = & certutil -hashfile "$FilePath" $HashAlgorithm
 
-    # Extract the hash from the output
-    $hash = $certUtilOutput | Select-String -Pattern "^([A-F0-9]+)"
+    # # Extract the hash from the output
+    # $hash = $certUtilOutput | Select-String -Pattern "^([A-F0-9]+)"
+    $hash = Get-FileHash -Path "FilePath" -Algorithm SHA256
 
     if ($hash) {
         return $hash.Matches.Groups[1].Value
@@ -200,6 +208,8 @@ function DSO_TOOLS {param()
     }
 
     ## Gitlab
+    write-host $global:GITLAB_VERSIONS
+    write-host $GITLAB_VERSIONS
     if ($global:GITLAB_VERSIONS -eq $null -and $GITLAB_VERSIONS -is [array] -and $GITLAB_VERSIONS.Length -gt 0) {
         foreach ($version in $GITLAB_VERSIONS) {
             $GITLAB_EE_LINK="https://packages.gitlab.com/gitlab/gitlab-ee/packages/el/8/gitlab-ee-${version}-ee.0.el8.x86_64.rpm/download.rpm"
@@ -731,19 +741,20 @@ function HASHER {param()
 
 ##
 ## Set download path
-$DOWNLOAD_DIR=".\latest"
+$DOWNLOAD_DIR="latest"
 ##
 
 # Remove contents in .\latest dir
 wipeLatest
 # Download
 DSO_TOOLS
-MGT_CLIENT_TOOLS
-RUNNER_IMAGES
+# MGT_CLIENT_TOOLS
+# RUNNER_IMAGES
+
 # Generate sha256 file
 HASHER
 # Zip .\latest to .\latest.zip
-zipFolder -dir $DOWNLOAD_DIR -zip $DOWNLOAD_ZIP
+# zipFolder -dir $DOWNLOAD_DIR -zip $DOWNLOAD_ZIP # will fail on large size
 
 ##
 ## Set download path - will refactor code
@@ -751,6 +762,7 @@ $DOWNLOAD_DIR=$COLLAB_DOWNLOAD_DIR
 ##
 
 # Download Collab
-COLLAB_TOOLS
+# COLLAB_TOOLS
+
 # Zip .\latest\collab to .\collab.zip
-zipFolder -dir $COLLAB_DOWNLOAD_DIR -zip $COLLAB_DOWNLOAD_ZIP
+# zipFolder -dir $COLLAB_DOWNLOAD_DIR -zip $COLLAB_DOWNLOAD_ZIP # will fail on large size
